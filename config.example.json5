@@ -1,0 +1,28 @@
+{
+    botQQ: {
+        uin: 123456, // bot 的 QQ 号。
+        password: 'PASSWORD OR PASSWORD MD5'
+    },
+    masterQQ: 123456, // bot 的主人的 QQ 号。
+    plugin: {
+        mathjax: {
+            enable: true,
+            macros: {
+
+            }
+        },
+        wolfram: {
+            enable: false,
+            alphaId: 'YOUR ALPHE ID'
+        },
+        forwardGroudFile: { // 转存 QQ 群文件
+            enable: false,
+            gidList: [ // 要转存文件的 QQ 群列表
+                12345
+            ],
+            tmpDir: '/tmp/anbot', // 下载群文件的临时目录
+            refreshToken: '', // 阿里云盘的 refreshToken
+            shareLink: '' // 共享的链接地址
+        }
+    }
+}

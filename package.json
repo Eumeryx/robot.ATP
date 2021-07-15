@@ -1,0 +1,29 @@
+{
+  "name": "a.t.p",
+  "version": "0.0.1",
+  "description": "robot A.T.P",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "atpbot": "node dist/index.js",
+    "build": "tsc",
+    "lint": "eslint --fix src && prettier --check --write src",
+    "lint:check": "eslint src --ext .ts && prettier --check src"
+  },
+  "author": "Eumeryx",
+  "license": "GPL-2.0-only",
+  "dependencies": {
+    "@types/node": "^12.12.6",
+    "@typescript-eslint/eslint-plugin": "^4.28.1",
+    "@typescript-eslint/parser": "^4.28.1",
+    "download": "^8.0.0",
+    "eslint": "^7.29.0",
+    "jsdom": "^16.6.0",
+    "json5": "^2.2.0",
+    "mathjax-full": "^3.2.0",
+    "oicq": "^1.17.3",
+    "prettier": "^2.3.2",
+    "typescript": "^4.3.4",
+    "wolfram-alpha-api": "https://products.wolframalpha.com/api/libraries/javascript/wolfram-alpha-api-1.0.0-rc.1.tgz"
+  }
+}

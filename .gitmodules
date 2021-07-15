@@ -1,0 +1,3 @@
+[submodule "externalDepend/aliyunpan"]
+	path = externalDepend/aliyunpan
+	url = git://github.com/wxy1343/aliyunpan.git
