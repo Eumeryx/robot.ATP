@@ -1,6 +1,5 @@
-import { FileElem, Gfs, GfsFileStat, GroupMessageEventData, segment } from 'oicq';
-const download = require('download');
-import { mkdirSync, writeFileSync, rmdirSync } from 'fs';
+import { FileElem, Gfs, GfsFileStat, segment } from 'oicq';
+import Download from 'nodejs-file-downloader';
 import * as path from 'path';
 import { execSync } from 'child_process';
 
@@ -9,7 +8,7 @@ export interface ForwardGroupFileOptions {
     gidList: number[];
     tmpDir: string;
     refreshToken: string;
-    shareLink: string
+    shareLink: string;
 }
 
 const aliYunPanUpload = (dirPath: string, refreshToken: string): Promise<string> =>
@@ -42,11 +41,16 @@ export const forwardGroupFile = async (
             const { name: fileName, url: fileUrl } = fileElemData;
             const fullDirPath = path.join(groupDirPath, parDirStat.name);
 
-            mkdirSync(fullDirPath, { recursive: true });
-            await download(encodeURI(fileUrl), fullDirPath, { filename: fileName });
+            const downloadFile = new Download({
+                url: encodeURI(fileUrl),
+                directory: fullDirPath,
+                fileName: fileName,
+                maxAttempts: 3
+            });
+            await downloadFile.download();
             await aliYunPanUpload(groupDirPath, config.refreshToken);
 
             return [segment.text(`此文件已转存至：${config.shareLink}`)];
         }
-    }  
+    }
 };
