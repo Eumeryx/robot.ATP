@@ -6,7 +6,7 @@
 
 1. Clone 代码
 ```bash
-git clone git://github.com/Eumeryx/rotbot.ATP.git --recurse-submodules
+git clone git://github.com/Eumeryx/robot.ATP.git --recurse-submodules
 ```
 
 2. 安装依赖
