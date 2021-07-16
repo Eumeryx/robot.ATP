@@ -5,7 +5,7 @@ import { ATP } from './core/ATP';
 
 const config = getConfig();
 const robot = createClient(config.botQQ.uin, {
-    log_level: 'debug',
+    log_level: 'warn',
     platform: 5
 });
 const atp = new ATP(robot, config);
