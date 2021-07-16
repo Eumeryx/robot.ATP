@@ -9,7 +9,7 @@ export interface WolframOptions {
 export const wolframPlugin = async (content: string, alphaId: string) => {
     const waApi = WolframAlphaAPI(alphaId);
 
-    return (waApi.getSimple({ i: content, fontsize: 16 }) as Promise<string>)
+    return (waApi.getSimple({ i: content, fontsize: 16, ip: '127.0.0.1' }) as Promise<string>)
         .then((image: string) => {
             // image head: "data:image/gif;base64,"
             const replyContent = `base64://${image.slice(22)}`;
