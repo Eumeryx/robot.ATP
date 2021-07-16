@@ -50,6 +50,7 @@ export class ATP {
                 let helpInfo = '';
                 //搜集已启用插件的帮助信息
                 commandHook.forEach((hook) => (helpInfo += hook.helpInfo));
+                helpInfo += `\nsrc: https://github.com/Eumeryx/robot.ATP`;
                 replyElem = [segment.text(helpInfo)];
             }
         }
