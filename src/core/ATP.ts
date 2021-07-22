@@ -64,7 +64,7 @@ export class ATP {
                 if (replyElem !== undefined) data.reply(replyElem);
             })
             .catch((err) => {
-                this.robot.sendPrivateMsg(this.masterQQ, err.toString);
+                this.robot.sendPrivateMsg(this.masterQQ, err.message);
                 console.error(err);
             });
 
@@ -85,7 +85,7 @@ export class ATP {
                     if (replyElem !== undefined) groupReply(replyElem);
                 })
                 .catch((err) => {
-                    this.robot.sendPrivateMsg(this.masterQQ, err.toString);
+                    this.robot.sendPrivateMsg(this.masterQQ, err.message);
                     console.error(err);
                 });
         }
@@ -107,7 +107,7 @@ export class ATP {
             forwardGroupFile(gfs, groupDirPath, fileElemData, config)
                 .then((replyElem) => replyElem !== undefined && groupReply(replyElem))
                 .catch((err) => {
-                    this.robot.sendPrivateMsg(this.masterQQ, err.toString);
+                    this.robot.sendPrivateMsg(this.masterQQ, err.message);
                     console.error(err);
                 })
                 .finally(() => rmdirSync(tmpDirPath, { recursive: true }));
