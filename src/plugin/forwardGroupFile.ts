@@ -1,7 +1,7 @@
 import { FileElem, Gfs, GfsFileStat, segment } from 'oicq';
 import Download from 'nodejs-file-downloader';
 import * as path from 'path';
-import { execSync } from 'child_process';
+import { exec } from 'child_process';
 
 export interface ForwardGroupFileOptions {
     enable: boolean;
@@ -12,18 +12,19 @@ export interface ForwardGroupFileOptions {
 }
 
 const aliYunPanUpload = (dirPath: string, refreshToken: string): Promise<string> =>
-    new Promise((resolve, reject) => {
-        try {
-            resolve(
-                execSync(
-                    `./externalDepend/aliyunpan/main.py -t ${refreshToken} upload -r 3 -p "${dirPath}"`,
-                    { encoding: 'utf-8' }
-                ).trim()
-            );
-        } catch (err) {
-            reject(err);
-        }
-    });
+    new Promise((resolve, reject) =>
+        exec(
+            `./externalDepend/aliyunpan/main.py -t ${refreshToken} upload -r 5 -c -cs 2097152 -p "${dirPath}"`,
+            { shell: '/bin/bash', encoding: 'utf-8' },
+            (err, stdout, stderr) => {
+                if (err !== null) {
+                    reject(stderr);
+                } else {
+                    resolve(stdout);
+                }
+            }
+        )
+    );
 
 export const forwardGroupFile = async (
     gfs: Gfs,
