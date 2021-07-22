@@ -18,7 +18,7 @@ export class ATP {
         uin: number;
         password: string;
     };
-    masterQQ?: number;
+    masterQQ: number;
     config: AtpRobotConfig;
     parseMessageHook: ParseMessageHook;
 
@@ -63,7 +63,10 @@ export class ATP {
             .then((replyElem) => {
                 if (replyElem !== undefined) data.reply(replyElem);
             })
-            .catch((err) => console.error(err));
+            .catch((err) => {
+                this.robot.sendPrivateMsg(this.masterQQ, err.toString);
+                console.error(err);
+            });
 
     parseGroupMessage = (data: GroupMessageEventData) => {
         const groupReply = (replyElem: MessageElem[]) => {
@@ -81,7 +84,10 @@ export class ATP {
                 .then((replyElem) => {
                     if (replyElem !== undefined) groupReply(replyElem);
                 })
-                .catch((err) => console.error(err));
+                .catch((err) => {
+                    this.robot.sendPrivateMsg(this.masterQQ, err.toString);
+                    console.error(err);
+                });
         }
 
         const { enable, gidList } = this.config.plugin.forwardGroudFile;
@@ -100,7 +106,10 @@ export class ATP {
 
             forwardGroupFile(gfs, groupDirPath, fileElemData, config)
                 .then((replyElem) => replyElem !== undefined && groupReply(replyElem))
-                .catch((err) => console.error(err))
+                .catch((err) => {
+                    this.robot.sendPrivateMsg(this.masterQQ, err.toString);
+                    console.error(err);
+                })
                 .finally(() => rmdirSync(tmpDirPath, { recursive: true }));
         }
     };

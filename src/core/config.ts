@@ -8,7 +8,7 @@ export interface AtpRobotConfig {
         uin: number;
         password: string;
     };
-    masterQQ?: number;
+    masterQQ: number;
     plugin: PluginOptions;
 }
 
