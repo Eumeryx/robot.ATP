@@ -14,16 +14,15 @@
   "license": "GPL-2.0-only",
   "dependencies": {
     "@types/node": "^12.12.6",
-    "@typescript-eslint/eslint-plugin": "^4.28.1",
-    "@typescript-eslint/parser": "^4.28.1",
-    "eslint": "^7.29.0",
-    "jsdom": "^16.6.0",
+    "@typescript-eslint/eslint-plugin": "^4.29.3",
+    "@typescript-eslint/parser": "^4.29.3",
+    "eslint": "^7.32.0",
     "json5": "^2.2.0",
     "mathjax-full": "^3.2.0",
-    "nodejs-file-downloader": "^4.7.1",
-    "oicq": "^1.17.3",
+    "nodejs-file-downloader": "^4.7.3",
+    "oicq": "^1.19.5",
     "prettier": "^2.3.2",
-    "typescript": "^4.3.4",
+    "typescript": "^4.4.2",
     "wolfram-alpha-api": "https://products.wolframalpha.com/api/libraries/javascript/wolfram-alpha-api-1.0.0-rc.1.tgz"
   }
 }
