@@ -1,6 +1,5 @@
 import * as fs from 'fs';
 const JSON5 = require('json5');
-import { exit } from 'process';
 import { PluginOptions } from '../plugin/index';
 
 export interface AtpRobotConfig {
@@ -12,11 +11,5 @@ export interface AtpRobotConfig {
     plugin: PluginOptions;
 }
 
-export const getConfig = (): AtpRobotConfig => {
-    try {
-        return JSON5.parse(fs.readFileSync('config.json5', 'utf-8'));
-    } catch (error) {
-        console.error(error.message);
-        exit(1);
-    }
-};
+export const getConfig = (): AtpRobotConfig =>
+    JSON5.parse(fs.readFileSync('config.json5', 'utf-8'));

@@ -101,7 +101,7 @@ export class ATP {
             const fileElemData = data.message[0].data;
             const gfs = this.robot.acquireGfs(data.group_id);
             const config = this.config.plugin.forwardGroudFile;
-            const tmpDirPath = path.join(config.tmpDir, fileElemData.fileid);
+            const tmpDirPath = path.join(config.tmpDir, fileElemData.fid);
             const groupDirPath = path.join(tmpDirPath, data.group_id.toString());
 
             forwardGroupFile(gfs, groupDirPath, fileElemData, config)
