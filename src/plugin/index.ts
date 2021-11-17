@@ -1,53 +1,49 @@
-import { MessageElem } from 'oicq';
-import { ForwardGroupFileOptions } from './forwardGroupFile';
-import { MathjaxOptions, mathjaxPlugin } from './mathjax';
-import { WolframOptions, wolframPlugin } from './wolfram';
-
-export interface PluginOptions {
-    mathjax: MathjaxOptions;
-    wolfram: WolframOptions;
-    forwardGroudFile: ForwardGroupFileOptions;
-}
+import { readdirSync } from 'fs';
+import { Sendable } from 'oicq';
+import path from 'path';
 
 /**
+ * type: 插件类型
+ * master： 是否为管理员命令
  * opcode: 命令操作码
- * helpInfo: 帮助信息
- * func: 插件的接口函数，返回 Promise<MessageElem>
+ * help: 命令的帮助信息
+ * func: 插件的接口函数，返回 Promise<Sendable>
  */
-interface CommandHook {
-    opcode: string;
-    helpInfo: string;
-    func: (elem: string) => Promise<MessageElem[]>;
+export interface Plugin {
+    type: string;
+    master?: boolean;
+    opcode?: string;
+    help?: string;
+    func: (msg: Sendable) => Promise<Sendable>;
 }
 
-export interface ParseMessageHook {
-    commandHook: CommandHook[];
+export interface PluginOptions {
+    [name: string]: any;
 }
 
-export const pluginInit = (options: PluginOptions, masterQQ?: number) => {
-    /* prase text command ****************************************************/
-    let commandHook: CommandHook[] = [];
+export const pluginInit = (options: PluginOptions) => {
+    let helpInfo: string = '';
+    let plugins: { [name: string]: Plugin[] } = {};
 
-    // mathjax pulgin
-    if (options.mathjax.enable === true) {
-        const mathjax = mathjaxPlugin(options.mathjax);
-        commandHook.push({
-            opcode: '#tex',
-            helpInfo: '\n#tex CODE  //MathJax',
-            func: mathjax
-        });
+    for (let pathName of readdirSync(__dirname)) {
+        const { name: fileName, ext: fileExt } = path.parse(pathName);
+
+        if (fileExt === '.js' && fileName !== 'index') {
+            let plug: Plugin | Plugin[] | undefined = require('./' + fileName).default(
+                options[fileName]
+            );
+
+            if (plug) {
+                plug = Array.isArray(plug) ? plug : [plug];
+
+                for (let p of plug) {
+                    plugins[p.type] ? plugins[p.type].push(p) : (plugins[p.type] = [p]);
+
+                    if (p.help) helpInfo += `\n\n${p.help}`;
+                }
+            }
+        }
     }
 
-    // wolfram pulgin
-    if (options.wolfram.enable === true) {
-        commandHook.push({
-            opcode: '#mma',
-            helpInfo: '\n#mma CODE  //Wolfram|Alpha',
-            func: (elem: string) => wolframPlugin(elem, options.wolfram.alphaId)
-        });
-    }
-
-    return {
-        commandHook: commandHook
-    };
+    return { plugins, helpInfo: helpInfo.trim() };
 };

@@ -4,17 +4,22 @@ import { SVG } from 'mathjax-full/js/output/svg';
 import { liteAdaptor } from 'mathjax-full/js/adaptors/liteAdaptor';
 import { RegisterHTMLHandler } from 'mathjax-full/js/handlers/html';
 import { AllPackages } from 'mathjax-full/js/input/tex/AllPackages';
-import { segment } from 'oicq';
-import { execSync } from 'child_process';
 
-export interface MathjaxOptions {
+import { segment } from 'oicq';
+import { svg2png } from '../utils';
+
+interface MathjaxOptions {
     enable: boolean;
     macros: {
         [name: string]: string;
     };
 }
 
-export const mathjaxPlugin = (options: MathjaxOptions) => {
+const mathjaxPlugin = (options?: MathjaxOptions) => {
+    if (!options || !options.enable) {
+        return undefined;
+    }
+
     const adaptor = liteAdaptor();
     RegisterHTMLHandler(adaptor);
 
@@ -25,24 +30,17 @@ export const mathjaxPlugin = (options: MathjaxOptions) => {
     const svg = new SVG({ fontCache: 'local' });
     const html = mathjax.document('', { InputJax: tex, OutputJax: svg });
 
-    return async (tex: string) => {
-        const svgString = `<?xml version="1.0"?>${adaptor.innerHTML(
-            html.convert(tex, { display: true })
-        )}`;
+    return {
+        type: 'text',
+        opcode: '#tex',
+        help: '#tex CODE\n// MathJax',
+        func: async (tex: string) => {
+            const svgString = adaptor.innerHTML(html.convert(tex, { display: true }));
+            const png = await svg2png(svgString);
 
-        let replyElem;
-        if (svgString.includes('data-mml-node="merror"')) {
-            const errorMessage = svgString.match(/<title>(.*?)<\/title>/)![1];
-            replyElem = segment.text(errorMessage);
-        } else {
-            replyElem = segment.image(
-                `base64://${execSync('rsvg-convert -x 6 -y 6 -b white -f png | base64', {
-                    input: svgString,
-                    encoding: 'utf-8'
-                })}`
-            );
+            return segment.image(png);
         }
-
-        return [replyElem];
     };
 };
+
+export default mathjaxPlugin;

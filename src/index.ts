@@ -5,7 +5,7 @@ import { ATP } from './core/ATP';
 
 const config = getConfig();
 const robot = createClient(config.botQQ.uin, {
-    log_level: 'warn',
+    log_level: 'error',
     platform: 5
 });
 const atp = new ATP(robot, config);
@@ -16,7 +16,7 @@ robot.on('system.online', () => console.log('Logged in!'));
 // 监听滑动验证码
 robot.on('system.login.slider', () => {
     process.stdin.once('data', (input: string) => {
-        robot.sliderLogin(input);
+        robot.submitSlider(input);
     });
 });
 
