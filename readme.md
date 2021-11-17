@@ -6,21 +6,22 @@
 
 1. Clone 代码
 ```bash
-git clone git://github.com/Eumeryx/robot.ATP.git --recurse-submodules
+git clone git://github.com/Eumeryx/robot.ATP.git
 ```
 
 2. 安装依赖
+
 本体：
 ```bash
 npm install
 ```
 MathJax:
 ```bash
-# apt install librsvg2-bin
+sudo apt install librsvg2-bin
 ```
-aliyunpan:
+Wolfram|Alpha:
 ```bash
-pip3 install -r externalDepend/aliyunpan/requirements.txt
+sudo apt install imagemagick
 ```
 
 3. 生成 CommonJs
@@ -37,11 +38,4 @@ cp config.example.json5 config.json5
 5. 运行
 ```bash
 npm run atpbot
-```
-
-### PR
-
-PR 前请先统一代码风格：
-```bash
-npm run lint
 ```
