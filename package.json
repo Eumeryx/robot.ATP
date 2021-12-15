@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "atpbot": "node dist/index.js",
+    "atpbot": "node -r esm dist/index.js",
     "build": "tsc",
     "lint": "eslint --fix src && prettier --check --write src",
     "lint:check": "eslint src --ext .ts && prettier --check src"
@@ -21,6 +21,7 @@
     "typescript": "^4.5.4"
   },
   "dependencies": {
+    "esm": "^3.2.25",
     "json5": "^2.2.0",
     "mathjax-full": "^3.2.0",
     "oicq": "^2.1.8"
