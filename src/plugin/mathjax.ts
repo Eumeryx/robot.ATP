@@ -1,12 +1,10 @@
-import { mathjax } from 'mathjax-full/js/mathjax';
-import { TeX } from 'mathjax-full/js/input/tex';
-import { SVG } from 'mathjax-full/js/output/svg';
-import { liteAdaptor } from 'mathjax-full/js/adaptors/liteAdaptor';
-import { RegisterHTMLHandler } from 'mathjax-full/js/handlers/html';
-import { AllPackages } from 'mathjax-full/js/input/tex/AllPackages';
-
 import { segment } from 'oicq';
 import { svg2png } from '../utils';
+import { MathJaxConfig } from 'mathjax-full/ts/components/global';
+import { AllPackages } from 'mathjax-full/js/input/tex/AllPackages';
+
+const { init:mathjaxInit } = require('mathjax-full');
+const { source } = require('mathjax-full/components/src/source.js');
 
 interface MathjaxOptions {
     enable: boolean;
@@ -15,27 +13,41 @@ interface MathjaxOptions {
     };
 }
 
+const mathjaxConfig: MathJaxConfig = {
+    options: {
+        enableAssistiveMml: false
+    },
+    loader: {
+        source: source,
+        load: ['adaptors/liteDOM', 'tex-svg', '[tex]/all-packages']
+    },
+    tex: {
+        packages: ['require', ...AllPackages].sort()
+    },
+    svg: {
+        fontCache: 'local'
+    },
+    startup: {
+        typeset: false
+    }
+};
+
 const mathjaxPlugin = (options?: MathjaxOptions) => {
     if (!options || !options.enable) {
         return undefined;
+    } else if (options.macros) {
+        mathjaxConfig.tex.macros = options.macros
     }
-
-    const adaptor = liteAdaptor();
-    RegisterHTMLHandler(adaptor);
-
-    const tex = new TeX({
-        packages: AllPackages.sort(),
-        macros: options.macros
-    });
-    const svg = new SVG({ fontCache: 'local' });
-    const html = mathjax.document('', { InputJax: tex, OutputJax: svg });
 
     return {
         type: 'text',
         opcode: '#tex',
         help: '#tex CODE\n// MathJax',
         func: async (tex: string) => {
-            const svgString = adaptor.innerHTML(html.convert(tex, { display: true }));
+            const mathjax = await mathjaxInit(mathjaxConfig);
+            const htmlNode = await mathjax.tex2svgPromise(tex, { display: true });
+
+            const svgString = mathjax.startup.adaptor.innerHTML(htmlNode);
             const png = await svg2png(svgString);
 
             return segment.image(png);
